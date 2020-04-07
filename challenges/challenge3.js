@@ -2,32 +2,58 @@
  *******************************************************************************
  * INSTRUCTIONS:
  * Follow the steps below and answer the discusssion questions that follow.
- * 
+ *
  * 1. Read over the `greetAndUppercase` function. This function uses
  *    Async/Await. How is this function different than a regular (non-async)
  *    function? What is its return type?
- * 
- * 
+ *
+ *     - Its different syntax that makes a lot more sense, but return type is still the same,
+ *       always a promise object.
+ *
+ *
  * 2. Uncomment block #1 and run the code using `node challenge3.js`. What is
  *    printed when we use `greetAndUppercase` like a regular function?
- * 
- * 
+ *
+ *     - We get that pending Promise output...
+ *
+ *
  * 3. Uncomment block #2 and run the code again. What happens now?
- * 
- * 
- * 4. Write an asynchronous method 'spacer' that takes a string as input and 
- *    returns the input string with a space added between each character. You 
+ *
+ *     - It waits for the promise to return.
+ *
+ *
+ * 4. Write an asynchronous method 'spacer' that takes a string as input and
+ *    returns the input string with a space added between each character. You
  *    can use your solution from Part 3.
- * 
+ *
  *    Call 'spacer' in the `greetAndUppercase` method and run your code again.
  *    You should see something like:
- * 
+ *
  *    'H E L L O   T H E R E ,   D U C K Y'
- * 
- * 
+ *
+ *      - Done! Everything works...
+ *
+ *
  *******************************************************************************
  */
 
+
+ function spacer(str){
+     return new Promise(function(resolve, reject) {
+         setTimeout(function() {
+             if(typeof str === 'string'){
+                 output = "";
+                 let chars = str.split("");
+                 for(let i = 0; i < chars.length; i++){
+                     output += (chars[i] + ' ');
+                 }
+                 resolve(output);
+             }else{
+                 reject("Input string must be of type string!");
+             }
+         }, 1000)
+     })
+ }
 
  /**
   * Asynchronously returns a greeting for a specified name.
@@ -36,7 +62,7 @@
  function greet(name) {
     return new Promise(function(resolve, reject) {
       setTimeout(function() {
-        if (typeof name === 'string') { 
+        if (typeof name === 'string') {
           resolve('Hello there, ' + name);
         } else {
           reject('Name must be a string!');
@@ -64,18 +90,19 @@ function uppercaser(str) {
 async function greetAndUppercase(name) {
     greeting = await greet(name)
     uppercasedGreeting = await uppercaser(greeting)
-    return uppercasedGreeting
+    spacerGreeting = await spacer(uppercasedGreeting)
+    return spacerGreeting
 }
 
 /* Uncomment me! #1 */
 // result = greetAndUppercase('Ducky')
 // console.log(result)
 
-/* Uncomment me! #2 */
-// greetAndUppercase('Ducky')
-//     .then(function(result) {
-//         console.log(result)
-//     })
-//     .catch(function(err) {
-//         console.log(err)
-//     })
+// /* Uncomment me! #2 */
+greetAndUppercase('Ducky')
+    .then(function(result) {
+        console.log(result)
+    })
+    .catch(function(err) {
+        console.log(err)
+    })
